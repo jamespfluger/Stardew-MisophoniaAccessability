@@ -13,5 +13,8 @@ namespace MisophoniaAccessibility.Config
 
         [GameSound("gulp")]
         public bool DisableDrinkSound { get; set; } = false;
+
+        [GameSound("bubbles")]
+        public bool DisableBubblesSound { get; set; } = false;
     }
 }
