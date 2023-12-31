@@ -16,7 +16,6 @@ namespace MisophoniaAccessibility
 {
     public class MisophoniaAccessibilityMod : Mod
     {
-        public static IMonitor Logger { get; set; }
         public static Dictionary<string, bool> DisabledCodeSounds { get; set; } = new Dictionary<string, bool>();
         public static Dictionary<string, bool> DisabledNamedSounds { get; set; } = new Dictionary<string, bool>();
         public ModConfig Config { get; set; }
@@ -24,7 +23,6 @@ namespace MisophoniaAccessibility
 
         public override void Entry(IModHelper helper)
         {
-            Logger = Monitor;
             Config = helper.ReadConfig<ModConfig>();
             SoundsConfig = Config.SoundsToDisable;
 
@@ -46,7 +44,7 @@ namespace MisophoniaAccessibility
         {
             try
             {
-                Logger.Log("Doing harmony patches...", LogLevel.Trace);
+                Monitor.Log("Doing harmony patches...", LogLevel.Trace);
 
                 Harmony harmony = new Harmony(ModManifest.UniqueID);
 
@@ -56,11 +54,11 @@ namespace MisophoniaAccessibility
                 // Have Harmony take the original property get method, and replace it with the new one we defined in SoundPatch
                 harmony.Patch(original: originalMethod, prefix: new HarmonyMethod(prefixMethod));
 
-                Logger.Log("Patched the 'playSound' with a Harmony prefix. Note that this may cause unexpected behavior if other mods modiy this method.", LogLevel.Info);
+                Monitor.Log("Patched the 'playSound' with a Harmony prefix. Note that this may cause unexpected behavior if other mods modiy this method.", LogLevel.Info);
             }
             catch (Exception ex)
             {
-                Logger.Log($"Failed to patch 'playSound' with Harmony: {ex}", LogLevel.Error);
+                Monitor.Log($"Failed to patch 'playSound' with Harmony: {ex}", LogLevel.Error);
                 throw;
             }
         }
