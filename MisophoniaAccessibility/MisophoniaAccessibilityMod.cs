@@ -112,10 +112,7 @@ namespace MisophoniaAccessibility
                     mod: this.ModManifest,
                     name: () => gameSound.DisplayName,
                     tooltip: () => "Check if this sound should be disabled.",
-                    getValue: () =>
-                    {
-                        return (bool)property.GetValue(this.SoundsConfig);
-                    },
+                    getValue: () => (bool)property.GetValue(this.SoundsConfig),
                     setValue: isDisabled =>
                     {
                         if (isDisabled)
