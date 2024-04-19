@@ -48,7 +48,7 @@ namespace MisophoniaAccessibility
 
                 Harmony harmony = new Harmony(ModManifest.UniqueID);
 
-                MethodInfo originalMethod = AccessTools.Method(typeof(Game1), nameof(Game1.playSound));
+                MethodInfo originalMethod = AccessTools.Method(typeof(Game1), nameof(Game1.playSound), new Type[] { typeof(string), typeof(int?) });
                 MethodInfo prefixMethod = AccessTools.Method(typeof(SoundPatch), nameof(SoundPatch.PatchSound));
 
                 // Have Harmony take the original property get method, and replace it with the new one we defined in SoundPatch
@@ -113,17 +113,17 @@ namespace MisophoniaAccessibility
                     name: () => gameSound.DisplayName,
                     tooltip: () => "Check if this sound should be disabled.",
                     getValue: () => (bool)property.GetValue(this.SoundsConfig),
-                    setValue: isDisabled =>
+                    setValue: isEnabled =>
                     {
-                        if (isDisabled)
+                        if (isEnabled)
                         {
-                            DisabledCodeSounds.Remove(gameSound.CodeName);
+                            DisabledCodeSounds.TryAdd(gameSound.CodeName, isEnabled);
                         }
                         else
                         {
-                            DisabledCodeSounds.TryAdd(gameSound.CodeName, isDisabled);
+                            DisabledCodeSounds.Remove(gameSound.CodeName);
                         }
-                        property.SetValue(this.SoundsConfig, isDisabled);
+                        property.SetValue(this.SoundsConfig, isEnabled);
                     }
                 );
             }
