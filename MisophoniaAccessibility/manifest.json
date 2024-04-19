@@ -1,7 +1,7 @@
 {
     "Name": "Misophonia Accessibility",
     "Author": "The Fluffy Robot",
-    "Version": "4.0.1",
+    "Version": "4.0.3",
     "Description": "Removes the sound played when eating, along with other sounds if configured. This can also be done in the mod's UI.'",
     "UniqueID": "TheFluffyRobot.MisophoniaAccessibility",
     "EntryDll": "MisophoniaAccessibility.dll",

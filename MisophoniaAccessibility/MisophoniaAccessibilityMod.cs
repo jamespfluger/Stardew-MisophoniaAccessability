@@ -38,7 +38,7 @@ namespace MisophoniaAccessibility
         }
 
         /// <summary>
-        /// Patches the Game1.playSound method to not play the eat sound
+        /// Patches the Game1.playSound originalSoundMethod to not play the eat sound
         /// </summary>
         private void PerformHarmonyPatches()
         {
@@ -48,13 +48,15 @@ namespace MisophoniaAccessibility
 
                 Harmony harmony = new Harmony(ModManifest.UniqueID);
 
-                MethodInfo originalMethod = AccessTools.Method(typeof(Game1), nameof(Game1.playSound), new Type[] { typeof(string), typeof(int?) });
+                IEnumerable<MethodInfo> soundPlayMethods = AccessTools.GetDeclaredMethods(typeof(Game1)).Where(m => m.Name == nameof(Game1.playSound));
                 MethodInfo prefixMethod = AccessTools.Method(typeof(SoundPatch), nameof(SoundPatch.PatchSound));
 
-                // Have Harmony take the original property get method, and replace it with the new one we defined in SoundPatch
-                harmony.Patch(original: originalMethod, prefix: new HarmonyMethod(prefixMethod));
+                foreach (MethodInfo originalSoundMethod in soundPlayMethods)
+                {
+                    harmony.Patch(original: originalSoundMethod, prefix: new HarmonyMethod(prefixMethod));
+                    Monitor.Log("Patched the 'playSound' with a Harmony prefix. Note that this may cause unexpected behavior if other mods modiy this originalSoundMethod.", LogLevel.Info);
+                }
 
-                Monitor.Log("Patched the 'playSound' with a Harmony prefix. Note that this may cause unexpected behavior if other mods modiy this method.", LogLevel.Info);
             }
             catch (Exception ex)
             {
